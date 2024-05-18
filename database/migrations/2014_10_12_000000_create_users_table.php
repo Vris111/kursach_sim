@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('country');
             $table->string('email')->unique();
-            $table->string('telephone_number')->unique();
+            $table->string('telephone_number');
             $table->string('passport_series');
             $table->string('passport_number');
             $table->string('password');

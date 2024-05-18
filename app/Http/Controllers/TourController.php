@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TourResource;
 use App\Models\Tour;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 class TourController extends Controller
 {
     public function index()
@@ -22,36 +22,28 @@ class TourController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'starting_date' => 'required|date',
-            'days_count' => 'required|numeric',
-            'peoples_count' => 'required|numeric',
-            'price' => 'required|numeric',
+            'days_count' => 'required|numeric|min:1',
+            'peoples_count' => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:1',
         ]);
 
-        if ($validatedData['price'] <= 0) {
-            return response()->json(['error' => 'Price must be greater than zero'], 422);
-        }
-
-        if ($validatedData['days_count'] <= 0) {
-            return response()->json(['error' => 'Number of days must be greater than zero'], 422);
-        }
-
-        if ($validatedData['peoples_count'] <= 0) {
-            return response()->json(['error' => 'Number of people must be greater than zero'], 422);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
         $tour = Tour::create([
-            'name' => $validatedData['name'],
-            'country' => $validatedData['country'],
-            'description' => $validatedData['description'],
-            'starting_date' => $validatedData['starting_date'],
-            'days_count' => $validatedData['days_count'],
-            'peoples_count' => $validatedData['peoples_count'],
-            'price' => $validatedData['price'],
+            'name' => $request->input('name'),
+            'country' => $request->input('country'),
+            'description' => $request->input('description'),
+            'starting_date' => $request->input('starting_date'),
+            'days_count' => $request->input('days_count'),
+            'peoples_count' => $request->input('peoples_count'),
+            'price' => $request->input('price'),
         ]);
         return response()->json([
             'message' => 'Tour was successfully created',
@@ -69,36 +61,28 @@ class TourController extends Controller
     }
     public function update(Request $request, Tour $tour)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'starting_date' => 'required|date',
-            'days_count' => 'required|numeric',
-            'peoples_count' => 'required|numeric',
-            'price' => 'required|numeric',
+            'days_count' => 'required|numeric|min:1',
+            'peoples_count' => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:1',
         ]);
 
-        if ($validatedData['price'] <= 0) {
-            return response()->json(['error' => 'Price must be greater than zero'], 422);
-        }
-
-        if ($validatedData['days_count'] <= 0) {
-            return response()->json(['error' => 'Number of days must be greater than zero'], 422);
-        }
-
-        if ($validatedData['peoples_count'] <= 0) {
-            return response()->json(['error' => 'Number of people must be greater than zero'], 422);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
         $tour->update([
-            'name' => $validatedData['name'] ?? $tour->name,
-            'country' => $validatedData['country'] ?? $tour->country,
-            'description' => $validatedData['description'] ?? $tour->description,
-            'starting_date' => $validatedData['starting_date'] ?? $tour->starting_date,
-            'days_count' => $validatedData['days_count'] ?? $tour->days_count,
-            'peoples_count' => $validatedData['peoples_count'] ?? $tour->peoples_count,
-            'price' => $validatedData['price'] ?? $tour->price,
+            'name' => $request->input('name') ?? $tour->name,
+            'country' => $request->input('country') ?? $tour->country,
+            'description' => $request->input('description') ?? $tour->description,
+            'starting_date' => $request->input('starting_date') ?? $tour->starting_date,
+            'days_count' => $request->input('days_count') ?? $tour->days_count,
+            'peoples_count' => $request->input('peoples_count') ?? $tour->peoples_count,
+            'price' => $request->input('price') ?? $tour->price,
         ]);
         return response()->json([
             'message' => 'Tour was successfully updated',

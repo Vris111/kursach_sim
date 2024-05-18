@@ -6,7 +6,7 @@ use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Tour;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 class BookingController extends Controller
 {
     public function index()
@@ -23,18 +23,25 @@ class BookingController extends Controller
 
     public function store(Request $request, Tour $tour)
     {
-        $validatedData = $request->validate([
-            'tour_id' => 'required'
+
+        $validator = Validator::make($request->all(), [
+            'tour_name' => 'required|string|max:255',
+        ],[
+            'tour_name.required' => 'Tour name is required',
         ]);
 
-        $tour = Tour::find($validatedData['tour_id']);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $tour = Tour::where('name', $request->tour_name)->first();
         if (!$tour) {
             return response()->json(['error' => 'Tour not found'], 404);
         }
 
         $booking = new Booking([
             'user_id' => auth()->id(),
-            'tour_id' => $validatedData['tour_id'],
+            'tour_id' => $tour->id,
         ]);
         $booking->save();
         return response()->json(['message' => 'Booking created successfully'], 200);
@@ -48,18 +55,18 @@ class BookingController extends Controller
 
     public function updateStatus(Request $request, Booking $booking)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'status' => 'required|in:отклонена,ожидание,одобрена'
         ],[
             'status.required' => 'The status is required to fill in',
             'status.in' => 'The correct value is required: отклонена,ожидание,одобрена',
         ]);
-        if (!in_array($validatedData['status'], ['отклонена', 'ожидание', 'одобрена'])) {
-            return response()->json(['error' => 'Invalid status value'], 400);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
-        $booking->status = $validatedData['status'];
+        $booking->status = $request->input('status');
         $booking->save();
-        if ($validatedData['status'] == 'одобрена') {
+        if ($booking->status == 'одобрена') {
             return response()->json([
                 'message' => 'Booking status updated successfully. Please come to the office for confirmation, payment and document pickup.'
             ], 200);
