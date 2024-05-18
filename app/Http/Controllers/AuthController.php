@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -64,6 +65,13 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        $dateOfBirth = $request->input('date_of_birth');
+        $now = new DateTime();
+        $age = $now->diff(new DateTime($dateOfBirth))->y;
+        if ($age < 18) {
+            return response()->json(['error' => 'You must be at least 18 years old to register'], 422);
         }
 
         $passportSeries = $request->input('passport_series');
