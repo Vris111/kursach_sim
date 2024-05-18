@@ -16,7 +16,13 @@ class BookingResource extends JsonResource
     {
         switch ($this->status) {
             case 'одобрена':
-                $statusMessage = 'Ваша заявка одобрена. Пожалуйста, приходите в офис для оплаты и получения документов.';
+                $statusMessage = 'Your application has been approved.';
+                break;
+            case 'отклонена':
+                $statusMessage = 'Your application has been rejected.';
+                break;
+            case 'ожидание':
+                $statusMessage = 'Waiting.';
                 break;
             default:
                 $statusMessage = $this->status;

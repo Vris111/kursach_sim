@@ -14,11 +14,11 @@ class Tour extends Model
 
     protected $fillable = [
         'name',
-        'starting_date',
-        'ending_date',
-        'price',
         'country',
         'description',
+        'starting_date',
+        'days_count',
+        'peoples_count',
+        'price',
     ];
-
 }

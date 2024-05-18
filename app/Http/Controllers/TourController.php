@@ -26,8 +26,9 @@ class TourController extends Controller
             'name' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'starting_date' => 'required|date|before:ending_date',
-            'ending_date' => 'required|date',
+            'starting_date' => 'required|date',
+            'days_count' => 'required|numeric',
+            'peoples_count' => 'required|numeric',
             'price' => 'required|numeric',
         ]);
 
@@ -35,15 +36,27 @@ class TourController extends Controller
             return response()->json(['error' => 'Price must be greater than zero'], 422);
         }
 
+        if ($validatedData['days_count'] <= 0) {
+            return response()->json(['error' => 'Number of days must be greater than zero'], 422);
+        }
+
+        if ($validatedData['peoples_count'] <= 0) {
+            return response()->json(['error' => 'Number of people must be greater than zero'], 422);
+        }
+
         $tour = Tour::create([
             'name' => $validatedData['name'],
             'country' => $validatedData['country'],
             'description' => $validatedData['description'],
             'starting_date' => $validatedData['starting_date'],
-            'ending_date' => $validatedData['ending_date'],
+            'days_count' => $validatedData['days_count'],
+            'peoples_count' => $validatedData['peoples_count'],
             'price' => $validatedData['price'],
         ]);
-        return new TourResource($tour);
+        return response()->json([
+            'message' => 'Tour was successfully created',
+            'data' => new TourResource($tour)
+        ], 201);
     }
 
     public function delete(Tour $tour)
@@ -60,8 +73,9 @@ class TourController extends Controller
             'name' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'starting_date' => 'required|date|before:ending_date',
-            'ending_date' => 'required|date',
+            'starting_date' => 'required|date',
+            'days_count' => 'required|numeric',
+            'peoples_count' => 'required|numeric',
             'price' => 'required|numeric',
         ]);
 
@@ -69,15 +83,27 @@ class TourController extends Controller
             return response()->json(['error' => 'Price must be greater than zero'], 422);
         }
 
+        if ($validatedData['days_count'] <= 0) {
+            return response()->json(['error' => 'Number of days must be greater than zero'], 422);
+        }
+
+        if ($validatedData['peoples_count'] <= 0) {
+            return response()->json(['error' => 'Number of people must be greater than zero'], 422);
+        }
+
         $tour->update([
             'name' => $validatedData['name'] ?? $tour->name,
             'country' => $validatedData['country'] ?? $tour->country,
             'description' => $validatedData['description'] ?? $tour->description,
             'starting_date' => $validatedData['starting_date'] ?? $tour->starting_date,
-            'ending_date' => $validatedData['ending_date'] ?? $tour->ending_date,
+            'days_count' => $validatedData['days_count'] ?? $tour->days_count,
+            'peoples_count' => $validatedData['peoples_count'] ?? $tour->peoples_count,
             'price' => $validatedData['price'] ?? $tour->price,
         ]);
-        return new TourResource($tour);
+        return response()->json([
+            'message' => 'Tour was successfully updated',
+            'data' => new TourResource($tour)
+        ], 200);
     }
     public function searchTours(Request $request)
     {

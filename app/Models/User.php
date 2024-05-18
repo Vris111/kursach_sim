@@ -28,6 +28,8 @@ class User extends Authenticatable
         'country',
         'telephone_number',
         'password',
+        'passport_series',
+        'passport_number'
     ];
 
     /**

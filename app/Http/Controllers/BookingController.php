@@ -37,7 +37,7 @@ class BookingController extends Controller
             'tour_id' => $validatedData['tour_id'],
         ]);
         $booking->save();
-        return $booking;
+        return response()->json(['message' => 'Booking created successfully'], 200);
     }
 
     public function delete(Booking $booking)
@@ -51,11 +51,11 @@ class BookingController extends Controller
         $validatedData = $request->validate([
             'status' => 'required|in:отклонена,ожидание,одобрена'
         ],[
-            'status.required' => 'Статус обязателен для заполнения',
-            'status.in' => 'Необходимо корректное значение: отклонена,ожидание,одобрена',
+            'status.required' => 'The status is required to fill in',
+            'status.in' => 'The correct value is required: отклонена,ожидание,одобрена',
         ]);
         if (!in_array($validatedData['status'], ['отклонена', 'ожидание', 'одобрена'])) {
-            return response()->json(['error' => 'Неверное значение статуса'], 400);
+            return response()->json(['error' => 'Invalid status value'], 400);
         }
         $booking->status = $validatedData['status'];
         $booking->save();

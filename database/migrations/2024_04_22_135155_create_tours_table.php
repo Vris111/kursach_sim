@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('description');
             $table->date('starting_date');
-            $table->date('ending_date');
+            $table->integer('days_count');
+            $table->integer('peoples_count');
             $table->integer('price');
             $table->timestamps();
         });

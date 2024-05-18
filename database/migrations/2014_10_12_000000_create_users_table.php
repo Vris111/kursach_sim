@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('email')->unique();
             $table->string('telephone_number')->unique();
+            $table->string('passport_series');
+            $table->string('passport_number');
             $table->string('password');
             $table->timestamps();
         });
