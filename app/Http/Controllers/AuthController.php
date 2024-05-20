@@ -39,28 +39,29 @@ class AuthController extends Controller
             'date_of_birth' => 'required|date',
             'country' => 'required|string',
             'email' => 'required|string|unique:users',
-            'telephone_number' => 'required|string|min:11',
+            'telephone_number' => 'required|string|min:11|max:11',
             'passport_series' => 'required|min:4|max:4',
             'passport_number' => 'required|min:6|max:6',
             'password' => 'required|string|min:6',
         ],[
             'name.required' => 'The name is required',
             'surname.required' => 'Last name is required',
-            'patronymic.required' => 'The patronymic is required to fill in',
+            'patronymic.required' => 'The patronymic is required',
             'date_of_birth.required' => 'Date of birth is required',
-            'country.required' => 'The country is required to fill in',
-            'email.required' => 'Email is required to fill in',
+            'country.required' => 'The country is required',
+            'email.required' => 'Email is required',
             'email.unique' => 'The email is already taken',
             'password.required' => 'The password is required',
             'password.min' => 'The password must be at least 6 characters long',
-            'telephone_number.required' => 'The phone number must be at least 11 characters long',
-            'telephone_number.min' => 'The phone number is required to fill in',
-            'passport_series.required' => 'The passport series is required to be filled in',
+            'telephone_number.required' => 'The phone number is required',
+            'telephone_number.min' => 'The phone number must be at least 11 characters long',
+            'telephone_number.max' => 'The phone number must not be greater than 11 characters',
+            'passport_series.required' => 'The passport series is required',
             'passport_series.min' => 'The passport series must be at least 4 characters long',
             'passport_series.max' => 'The passport series must be no more than 4 characters long',
-            'passport_number.required' => 'The passport number is required to be filled in',
-            'passport_number.min' => 'The passport number must be at least 4 characters long',
-            'passport_number.max' => 'The passport number must be no more than 4 characters',
+            'passport_number.required' => 'The passport number is required',
+            'passport_number.min' => 'The passport number must be at least 6 characters long',
+            'passport_number.max' => 'The passport number must be no more than 6 characters',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -70,7 +71,7 @@ class AuthController extends Controller
         $now = new DateTime();
         $age = $now->diff(new DateTime($dateOfBirth))->y;
         if ($age < 18) {
-            return response()->json(['error' => 'You must be at least 18 years old to register'], 422);
+            return response()->json(['message' => 'You must be at least 18 years old to register'], 422);
         }
 
         $passportSeries = $request->input('passport_series');
