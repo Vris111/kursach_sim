@@ -23,6 +23,7 @@ class TourResource extends JsonResource
             'days_count' => $this -> days_count,
             'peoples_count' => $this -> peoples_count,
             'price' => $this -> price,
+            'img' => $this-> img,
         ];
     }
 }

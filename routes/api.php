@@ -20,7 +20,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::get('tours', [TourController::class, 'index']);
 Route::get('tour_search', [TourController::class, 'searchTours']);
-
+Route::get('tours/{tour}', [TourController::class, 'show']);
 
 Route::middleware('auth:sanctum')-> group(function () {
     Route::get('user', [AuthController::class, 'user']);

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('days_count');
             $table->integer('peoples_count');
             $table->integer('price');
+            $table->string('img')->nullable();
             $table->timestamps();
         });
     }

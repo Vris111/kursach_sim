@@ -20,6 +20,11 @@ class TourController extends Controller
         return view('tours.index', compact('tours'));
     }
 
+    public function show(Tour $tour)
+    {
+        return new TourResource($tour);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -30,6 +35,7 @@ class TourController extends Controller
             'days_count' => 'required|numeric|min:1',
             'peoples_count' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:1',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -45,6 +51,15 @@ class TourController extends Controller
             'peoples_count' => $request->input('peoples_count'),
             'price' => $request->input('price'),
         ]);
+
+        if ($request->hasFile('img')) {
+            $img = $request->file('img');
+            $imgName = time() . '.' . $img->getClientOriginalExtension();
+            $img->storeAs('public/tour_images', $imgName);
+            $tour->img = $imgName;
+            $tour->save();
+        }
+
         return response()->json([
             'message' => 'Tour was successfully created',
             'data' => new TourResource($tour)

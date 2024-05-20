@@ -20,5 +20,6 @@ class Tour extends Model
         'days_count',
         'peoples_count',
         'price',
+        'img',
     ];
 }

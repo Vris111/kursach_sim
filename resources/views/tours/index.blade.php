@@ -11,6 +11,7 @@
                 <p>Дата начала: {{ $tour->starting_date }}</p>
                 <p>Дата окончания: {{ $tour->ending_date }}</p>
                 <p>Цена: {{ $tour->price }}</p>
+                <img src="{{ asset('/tour_images/' . $tour->img) }}" alt="Tour Image">
             </li>
         @endforeach
     </ul>
