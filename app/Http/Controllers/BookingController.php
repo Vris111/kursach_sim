@@ -36,7 +36,7 @@ class BookingController extends Controller
 
         $tour = Tour::where('name', $request->tour_name)->first();
         if (!$tour) {
-            return response()->json(['error' => 'Tour not found'], 404);
+            return response()->json(['message' => 'Tour not found'], 404);
         }
 
         $booking = new Booking([
@@ -58,7 +58,7 @@ class BookingController extends Controller
         $validator = Validator::make($request->all(), [
             'status' => 'required|in:отклонена,ожидание,одобрена'
         ],[
-            'status.required' => 'The status is required to fill in',
+            'status.required' => 'The status is required',
             'status.in' => 'The correct value is required: отклонена,ожидание,одобрена',
         ]);
         if ($validator->fails()) {

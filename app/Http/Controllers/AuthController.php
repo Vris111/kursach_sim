@@ -24,6 +24,7 @@ class AuthController extends Controller
             'date_of_birth' => $user->date_of_birth,
             'country' => $user->country,
             'email' => $user->email,
+            'telephone_number' => $user->telephone_number,
             'passport_series' => $user->passport_series,
             'passport_number' => $user->passport_number,
         ];
