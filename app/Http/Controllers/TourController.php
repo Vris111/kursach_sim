@@ -84,6 +84,7 @@ class TourController extends Controller
             'days_count' => 'required|numeric|min:1',
             'peoples_count' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:1',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -99,6 +100,15 @@ class TourController extends Controller
             'peoples_count' => $request->input('peoples_count') ?? $tour->peoples_count,
             'price' => $request->input('price') ?? $tour->price,
         ]);
+
+        if ($request->hasFile('img')) {
+            $img = $request->file('img');
+            $imgName = time() . '.' . $img->getClientOriginalExtension();
+            $img->storeAs('public/tour_images', $imgName);
+            $tour->img = $imgName;
+            $tour->save();
+        }
+
         return response()->json([
             'message' => 'Tour was successfully updated',
             'data' => new TourResource($tour)
