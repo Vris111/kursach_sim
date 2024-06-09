@@ -17,11 +17,11 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = Auth::user();
-        $role = Role::find($user->role_id);
-        if ($role->name === 'admin') {
-            $permissions = 'admin';
+        if ($user->role_id === '4a786c17-1692-11ef-8464-7085c2d4028b') {
+        $permissions = 'admin';
         } else {
         $permissions = 'user';
+        }
         $response = [
             'name' => $user->name,
             'surname' => $user->surname,
@@ -142,5 +142,4 @@ class AuthController extends Controller
             'message' => 'Logout Successful',
         ])->withCookie($cookie);
     }
-}
 }
