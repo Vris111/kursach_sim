@@ -17,6 +17,11 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = Auth::user();
+        $role = Role::find($user->role_id);
+        if ($role->name === 'admin') {
+            $permissions = 'admin';
+        } else {
+        $permissions = 'user';
         $response = [
             'name' => $user->name,
             'surname' => $user->surname,
@@ -27,6 +32,7 @@ class AuthController extends Controller
             'telephone_number' => $user->telephone_number,
             'passport_series' => $user->passport_series,
             'passport_number' => $user->passport_number,
+            'role' => $permissions,
         ];
         return response()->json($response);
     }
@@ -136,4 +142,5 @@ class AuthController extends Controller
             'message' => 'Logout Successful',
         ])->withCookie($cookie);
     }
+}
 }
